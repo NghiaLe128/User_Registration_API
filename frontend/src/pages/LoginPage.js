@@ -3,26 +3,60 @@ import Button from "../components/ui/Button.js";
 import Input from "../components/ui/Input.js";
 import Label from "../components/ui/Label.js";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Swal from 'sweetalert2';
 
 const LoginPage = ({ onLogin }) => {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate(); // Create navigate function
+  const navigate = useNavigate();
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Logging in with:", { usernameOrEmail, password });
+    try {
+      const response = await axios.post("http://localhost:4000/user/login", {
+        identifier: usernameOrEmail,
+        password,
+      });
 
-    // Simulate successful login
-    if (usernameOrEmail && password) {
-      onLogin(); // Call the onLogin prop to update authentication status
-      navigate("/"); // Redirect to home page after successful login
+      console.log("Response:", response); // Log full response
+      if (response.status === 201) {
+        console.log("Login successful:", response.data);
+        Swal.fire({
+          icon: 'success',
+          title: 'Login Successful!',
+          text: 'Welcome back!',
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        onLogin(); // Update authentication state
+        navigate("/"); // Navigate to home after successful login
+      }
+    } catch (error) {
+      let errorMessage = "An unknown error occurred.";
+
+      if (error.response) {
+        console.error("Login error:", error.response.data);
+        const errorData = error.response.data;
+        if (errorData && errorData.message && errorData.message.message) {
+          errorMessage = errorData.message.message;
+        } else if (errorData && errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } else {
+        console.error("Login error:", error.message);
+        errorMessage = error.message;
+      }
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: errorMessage,
+      });
     }
   };
 
@@ -66,7 +100,9 @@ const LoginPage = ({ onLogin }) => {
           <Button type="submit" text="Sign In" className="mt-4" />
         </form>
         <div className="text-center mt-4">
-          <p className="text-sm">Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Register</Link></p>
+          <p className="text-sm">
+            Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Register</Link>
+          </p>
         </div>
       </div>
     </div>

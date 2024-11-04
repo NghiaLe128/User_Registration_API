@@ -10,8 +10,16 @@ const App = () => {
   return (
     <Router>
       <Routes>
+        {/* Protected route to HomePage */}
         <Route path="/" element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />} />
-        <Route path="/login" element={<LoginPage onLogin={() => setIsAuthenticated(true)} />} />
+        
+        {/* Login Page Route */}
+        <Route
+          path="/login"
+          element={<LoginPage onLogin={() => setIsAuthenticated(true)} />}
+        />
+        
+        {/* Register Page Route */}
         <Route path="/register" element={<RegisterPage />} />
       </Routes>
     </Router>
