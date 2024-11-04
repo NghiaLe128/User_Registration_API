@@ -27,18 +27,18 @@ export class UsersController {
 
 
   @Post('login')
-async login(@Body() loginUserDto: LoginUserDto) {
-  const { identifier, password } = loginUserDto;
-  const user = await this.usersService.login(identifier, password);
-  if (!user) {
-    throw new BadRequestException('Invalid credentials');
+  async login(@Body() loginUserDto: LoginUserDto) {
+    const { identifier, password } = loginUserDto;
+    const user = await this.usersService.login(identifier, password);
+    if (!user) {
+      throw new BadRequestException('Invalid credentials');
+    }
+    return {
+      status: 200,
+      message: 'Login successful',
+      user,
+    };
   }
-  return {
-    status: 200,
-    message: 'Login successful',
-    user,
-  };
-}
 
 
 }
