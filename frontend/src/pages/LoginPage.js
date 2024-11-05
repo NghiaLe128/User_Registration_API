@@ -18,11 +18,11 @@ const LoginPage = ({ onLogin }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:4000/user/login", {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/user/login`, {
         identifier: usernameOrEmail,
         password,
       });
-
+  
       console.log("Response:", response); // Log full response
       if (response.status === 201) {
         console.log("Login successful:", response.data);
@@ -38,7 +38,7 @@ const LoginPage = ({ onLogin }) => {
       }
     } catch (error) {
       let errorMessage = "An unknown error occurred.";
-
+  
       if (error.response) {
         console.error("Login error:", error.response.data);
         const errorData = error.response.data;
@@ -51,7 +51,7 @@ const LoginPage = ({ onLogin }) => {
         console.error("Login error:", error.message);
         errorMessage = error.message;
       }
-
+  
       Swal.fire({
         icon: 'error',
         title: 'Login Failed',
@@ -59,6 +59,7 @@ const LoginPage = ({ onLogin }) => {
       });
     }
   };
+  
 
   return (
     <div
