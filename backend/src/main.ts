@@ -13,7 +13,7 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: 'http://localhost:3000', // Change this to your frontend URL
+    origin: ['http://localhost:3000', 'https://user-registration-api-bk0e.onrender.com/'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });  
